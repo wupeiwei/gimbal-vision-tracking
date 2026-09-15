@@ -11,3 +11,6 @@ output/
 # 编辑器
 .idea/
 *.swp
+
+# 本地学习任务书（不上传 GitHub）
+docs/*_TASKS.md
