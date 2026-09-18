@@ -20,3 +20,7 @@ docs/*_TASKS.md
 
 # 第三方工具与驱动包（可重新下载）
 docs/hardware/tools/
+
+# 板子照片与原理图（仅本地）
+docs/hardware/*.pdf
+docs/hardware/*.jpg
