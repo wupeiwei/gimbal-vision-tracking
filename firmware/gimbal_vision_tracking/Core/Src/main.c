@@ -26,6 +26,8 @@
 /* USER CODE BEGIN Includes */
 #include "uart.h"
 #include <string.h>
+#include <stdlib.h>     /* atoi */
+#include <stdio.h>      /* sprintf */
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +52,8 @@ uint8_t content[] = {"hello\r\n"};
 char line_buf[64];
 uint16_t line_len = 0;
 uint32_t last_hb = 0;
+volatile int32_t glo_dx = 0;
+volatile int32_t glo_dy = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -181,6 +185,19 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 
 /* 协议的业务层 */
 void process_line(char *line) {
+    if ((line[0] >= '0' && line[0] <= '9') || line[0] == '-') {
+        char*comma = strchr(line, ',');
+        if (comma == NULL) {
+            return;
+        }
+        glo_dx = atoi(line);
+        glo_dy = atoi(comma + 1);
+
+        char buffer[32];
+        sprintf(buffer, "ok %d,%d\r\n", (int) glo_dx, (int) glo_dy);
+        uart_send_str(buffer);
+        return;
+    }
     if (strcmp(line, "ping") == 0) {
         uart_send_str("pong\r\n");
     } else if (strcmp(line, "led on") == 0) {
